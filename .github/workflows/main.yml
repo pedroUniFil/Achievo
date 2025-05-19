@@ -7,9 +7,16 @@ jobs:
     name: Add Comment to Jira Issue
     runs-on: ubuntu-latest
     steps:
-      - name: Add Comment to Jira
-        uses: atlassian/jira-action/comment@v3
+      - name: Extract Jira Issue Key
+        id: extract_jira_key
+        uses: atlassian/gajira-find-issue-key@v3
         with:
+          string: ${{ github.ref_name }}
+          
+      - name: Add Comment to Jira
+        uses: atlassian/gajira-comment@v3
+        with:
+          issue: ${{ steps.extract_jira_key.outputs.issue }}
           comment: |
             Automated comment from GitHub Actions:
             A push was made to branch: `${{ github.ref_name }}`
