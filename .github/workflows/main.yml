@@ -1,0 +1,22 @@
+name: Simple Jira Update on Push
+
+on: push
+
+jobs:
+  add_comment_to_jira:
+    name: Add Comment to Jira Issue
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add Comment to Jira
+        uses: atlassian/jira-action/comment@v3
+        with:
+          comment: |
+            Automated comment from GitHub Actions:
+            A push was made to branch: `${{ github.ref_name }}`
+            Last commit message: `${{ github.event.head_commit.message }}`
+            Pushed by: `${{ github.actor }}`
+            See commit details: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}
+          jira_base_url: ${{ secrets.JIRA_BASE_URL }}
+          jira_user_email: ${{ secrets.JIRA_USER_EMAIL }}
+          jira_api_token: ${{ secrets.JIRA_API_TOKEN }}
+          fail_on_error: true
